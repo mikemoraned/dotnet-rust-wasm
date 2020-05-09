@@ -1,21 +1,17 @@
 ## Prerequisites
 
-    cargo install cargo-wasi
+wasm-pack
 
 ## Build
 
-    cargo wasi build --release
-
-## Test
-
-    cargo test
+    wasm-pack build --scope mike_moran --release
 
 ## Inspect
 
 Exports:
 
-    wasm2wat target/wasm32-wasi/release/rust_lib.wasm --enable-all | grep "export"
+    wasm2wat target/wasm32-unknown-unknown/release/rust_lib.wasm | grep "export"
 
 Imports:
 
-    wasm2wat target/wasm32-wasi/release/rust_lib.wasm --enable-all | grep "import"
+    wasm2wat target/wasm32-unknown-unknown/release/rust_lib.wasm | grep "import"

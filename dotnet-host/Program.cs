@@ -12,16 +12,32 @@ namespace Tutorial
             using var host = new Host();
 
             host.DefineFunction(
-                "wasi_snapshot_preview1",
-                "fd_write",
-                (int fd, int iovs, int iovs_len, int nwritten) =>
+                "__wbindgen_placeholder__",
+                "__wbindgen_describe",
+                (int ignore1) =>
                 {
-                    Console.WriteLine("fd_write called");
+                    Console.WriteLine("__wbindgen_describe called");
+                }
+            );
+            host.DefineFunction(
+                "__wbindgen_anyref_xform__",
+                "__wbindgen_anyref_table_grow",
+                (int ignore) =>
+                {
+                    Console.WriteLine("__wbindgen_anyref_table_grow called");
                     return WASI_ERRNO_SUCCESS;
                 }
             );
+            host.DefineFunction(
+                "__wbindgen_anyref_xform__",
+                "__wbindgen_anyref_table_set_null",
+                (int ignore) =>
+                {
+                    Console.WriteLine("__wbindgen_anyref_table_set_null called");
+                }
+            );
 
-            using var module = host.LoadModule("../rust-lib/target/wasm32-wasi/release/rust_lib.wasm");
+            using var module = host.LoadModule("../rust-lib/target/wasm32-unknown-unknown/release/rust_lib.wasm");
             Console.WriteLine("Loaded");
 
             using dynamic instance = host.Instantiate(module);
