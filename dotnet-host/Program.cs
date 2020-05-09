@@ -1,7 +1,8 @@
 ﻿using System;
 using Wasmtime;
+using System.Linq;
 
-namespace Tutorial
+namespace DotnetHost
 {
     class Program
     {
@@ -40,10 +41,36 @@ namespace Tutorial
             using var module = host.LoadModule("../rust-lib/target/wasm32-unknown-unknown/release/rust_lib.wasm");
             Console.WriteLine("Loaded");
 
-            using dynamic instance = host.Instantiate(module);
+            using var instance = host.Instantiate(module);
             Console.WriteLine("Instantiated");
 
-            Console.WriteLine($"reverse(\"foo\") = {instance.reverse("foo")}");
+            var memory = instance.Externs.Memories.SingleOrDefault() ??
+                throw new InvalidOperationException("Module must export a memory.");
+
+            var allocator = new Allocator(memory, instance.Externs.Functions);
+
+            (var inputAddress, var inputLength) = allocator.AllocateString("foo");
+
+            try
+            {
+                object[] results = (instance as dynamic).reverse(inputAddress, inputLength);
+
+                var outputAddress = (int)results[0];
+                var outputLength = (int)results[1];
+
+                try
+                {
+                    Console.WriteLine(memory.ReadString(outputAddress, outputLength));
+                }
+                finally
+                {
+                    allocator.Free(outputAddress, outputLength);
+                }
+            }
+            finally
+            {
+                allocator.Free(inputAddress, inputLength);
+            }
         }
     }
 }
