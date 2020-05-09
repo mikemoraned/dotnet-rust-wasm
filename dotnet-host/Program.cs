@@ -42,8 +42,8 @@ namespace Tutorial
 
             using dynamic instance = host.Instantiate(module);
             Console.WriteLine("Instantiated");
-            // Console.WriteLine($"gcd(27, 6) = {instance.gcd(27, 6)}");
 
+            Console.WriteLine($"reverse(\"foo\") = {instance.reverse("foo")}");
         }
     }
 }
