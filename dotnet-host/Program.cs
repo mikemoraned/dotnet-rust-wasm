@@ -53,8 +53,14 @@ namespace DotnetHost
 
             try
             {
-                object[] results = (instance as dynamic).reverse(inputAddress, inputLength);
+                object[] results = (instance as dynamic).reverse(8, inputAddress, inputLength);
 
+                Console.WriteLine("Invoked");
+
+                foreach (var result in results)
+                {
+                    Console.WriteLine("{}", result);
+                }
                 var outputAddress = (int)results[0];
                 var outputLength = (int)results[1];
 
