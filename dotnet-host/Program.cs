@@ -53,13 +53,25 @@ namespace DotnetHost
 
             try
             {
-                object[] results = (instance as dynamic).reverse(inputAddress, inputLength);
+                (instance as dynamic).reverse(8, inputAddress, inputLength);
 
-                var outputAddress = (int)results[0];
-                var outputLength = (int)results[1];
+                Console.WriteLine("Invoked");
 
+                // from wasm bindgen:
+                // 
+                // var r0 = getInt32Memory0()[8 / 4 + 0];
+                // var r1 = getInt32Memory0()[8 / 4 + 1];
+
+                var outputAddress = memory.ReadInt32(32 * (8 / 4 + 0));
+                var outputLength = memory.ReadInt32(32 * (8 / 4 + 1));
+
+                Console.WriteLine("{0}, {1}", outputAddress, outputLength);
                 try
                 {
+                    for (int address = 0; address < outputAddress + outputLength; address += 8)
+                    {
+                        Console.WriteLine(memory.ReadByte(address));
+                    }
                     Console.WriteLine(memory.ReadString(outputAddress, outputLength));
                 }
                 finally
